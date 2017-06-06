@@ -7,6 +7,7 @@ all: bin/confd
 
 GO_BUILD_CONTAINER?=calico/go-build:v0.4
 K8S_VERSION=1.6.4
+TEST_CONTAINER=heschlie/confd-test
 
 # All go files.
 GO_FILES:=$(shell find . -type f -name '*.go')

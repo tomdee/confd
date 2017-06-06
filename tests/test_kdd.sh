@@ -5,15 +5,15 @@ export NODENAME="kube-master"
 echo "Waiting for API server to come online"
 until /bin/kubectl version; do
   sleep 1
-  done
+done
 
 /bin/kubectl apply -f /tests/tprs.yaml
 /bin/kubectl apply -f /tests/nodes.yaml
 
 echo "Waiting for TPRs to apply"
-until /bin/kubectl apply -f /tests/tpr_resources.yaml; do
+until /bin/kubectl apply -f /tests/tpr_data.yaml; do
   sleep 1
-  done
+done
 
 echo "Getting latest confd templates from calicoctl"
 /usr/bin/git clone https://github.com/projectcalico/calicoctl.git
@@ -24,7 +24,7 @@ sed "s/NODENAME/$NODENAME/" /etc/calico/confd/templates/bird6_aggr.toml.template
 sed "s/NODENAME/$NODENAME/" /etc/calico/confd/templates/bird_aggr.toml.template > /etc/calico/confd/conf.d/bird_aggr.toml
 sed "s/NODENAME/$NODENAME/" /etc/calico/confd/templates/bird_ipam.toml.template > /etc/calico/confd/conf.d/bird_ipam.toml
 
-# Need to pause as running
+# Need to pause as running confd immediately after might result in files not being present.
 sleep 1
 
 echo "Running confd against KDD"

@@ -1,232 +1,55 @@
 apiVersion: v1
-items:
-- apiVersion: v1
-  kind: Node
-  metadata:
-    annotations:
-      node.alpha.kubernetes.io/ttl: "0"
-      projectcalico.org/IPv4Address: 10.192.0.2/16
-      volumes.kubernetes.io/controller-managed-attach-detach: "true"
-    creationTimestamp: 2017-06-05T21:19:30Z
-    labels:
-      beta.kubernetes.io/arch: amd64
-      beta.kubernetes.io/os: linux
-      kubernetes.io/hostname: kube-master
-      node-role.kubernetes.io/master: ""
-    name: kube-master
-    namespace: ""
-    resourceVersion: "1064"
-    selfLink: /api/v1/nodeskube-master
-    uid: a9862daa-4a34-11e7-80e1-0242386393d0
-  spec:
-    externalID: kube-master
-    podCIDR: 192.168.0.0/24
-  status:
-    addresses:
-    - address: 10.192.0.2
-      type: LegacyHostIP
-    - address: 10.192.0.2
-      type: InternalIP
-    - address: kube-master
-      type: Hostname
-    allocatable:
-      cpu: "8"
-      memory: 49318300Ki
-      pods: "110"
-    capacity:
-      cpu: "8"
-      memory: 49420700Ki
-      pods: "110"
-    conditions:
-    - lastHeartbeatTime: 2017-06-05T21:22:53Z
-      lastTransitionTime: 2017-06-05T21:19:30Z
-      message: kubelet has sufficient disk space available
-      reason: KubeletHasSufficientDisk
-      status: "False"
-      type: OutOfDisk
-    - lastHeartbeatTime: 2017-06-05T21:22:53Z
-      lastTransitionTime: 2017-06-05T21:19:30Z
-      message: kubelet has sufficient memory available
-      reason: KubeletHasSufficientMemory
-      status: "False"
-      type: MemoryPressure
-    - lastHeartbeatTime: 2017-06-05T21:22:53Z
-      lastTransitionTime: 2017-06-05T21:19:30Z
-      message: kubelet has no disk pressure
-      reason: KubeletHasNoDiskPressure
-      status: "False"
-      type: DiskPressure
-    - lastHeartbeatTime: 2017-06-05T21:22:53Z
-      lastTransitionTime: 2017-06-05T21:20:40Z
-      message: kubelet is posting ready status. AppArmor enabled
-      reason: KubeletReady
-      status: "True"
-      type: Ready
-    daemonEndpoints:
-      kubeletEndpoint:
-        Port: 10250
-    nodeInfo:
-      architecture: amd64
-      bootID: ac6c11fc-1539-4900-a8c9-48323f2fc3a2
-      containerRuntimeVersion: docker://1.12.6
-      kernelVersion: 4.8.0-040800-generic
-      kubeProxyVersion: v1.6.2
-      kubeletVersion: v1.6.2
-      machineID: efcbe7b7ca7d4bccbf179b4b24e0d862
-      operatingSystem: linux
-      osImage: Ubuntu 16.04.2 LTS
-      systemUUID: 335BFA80-B175-0000-0000-000000000000
-- apiVersion: v1
-  kind: Node
-  metadata:
-    annotations:
-      node.alpha.kubernetes.io/ttl: "0"
-      projectcalico.org/IPv4Address: 10.192.0.3/16
-      volumes.kubernetes.io/controller-managed-attach-detach: "true"
-    creationTimestamp: 2017-06-05T21:20:07Z
-    labels:
-      beta.kubernetes.io/arch: amd64
-      beta.kubernetes.io/os: linux
-      kubernetes.io/hostname: kube-node-1
-    name: kube-node-1
-    namespace: ""
-    resourceVersion: "1062"
-    selfLink: /api/v1/nodeskube-node-1
-    uid: bfca5f9e-4a34-11e7-aeee-0242386393d0
-  spec:
-    externalID: kube-node-1
-    podCIDR: 192.168.1.0/24
-  status:
-    addresses:
-    - address: 10.192.0.3
-      type: LegacyHostIP
-    - address: 10.192.0.3
-      type: InternalIP
-    - address: kube-node-1
-      type: Hostname
-    allocatable:
-      cpu: "8"
-      memory: 49318300Ki
-      pods: "110"
-    capacity:
-      cpu: "8"
-      memory: 49420700Ki
-      pods: "110"
-    conditions:
-    - lastHeartbeatTime: 2017-06-05T21:22:52Z
-      lastTransitionTime: 2017-06-05T21:20:07Z
-      message: kubelet has sufficient disk space available
-      reason: KubeletHasSufficientDisk
-      status: "False"
-      type: OutOfDisk
-    - lastHeartbeatTime: 2017-06-05T21:22:52Z
-      lastTransitionTime: 2017-06-05T21:20:07Z
-      message: kubelet has sufficient memory available
-      reason: KubeletHasSufficientMemory
-      status: "False"
-      type: MemoryPressure
-    - lastHeartbeatTime: 2017-06-05T21:22:52Z
-      lastTransitionTime: 2017-06-05T21:20:07Z
-      message: kubelet has no disk pressure
-      reason: KubeletHasNoDiskPressure
-      status: "False"
-      type: DiskPressure
-    - lastHeartbeatTime: 2017-06-05T21:22:52Z
-      lastTransitionTime: 2017-06-05T21:20:47Z
-      message: kubelet is posting ready status. AppArmor enabled
-      reason: KubeletReady
-      status: "True"
-      type: Ready
-    daemonEndpoints:
-      kubeletEndpoint:
-        Port: 10250
-    nodeInfo:
-      architecture: amd64
-      bootID: ac6c11fc-1539-4900-a8c9-48323f2fc3a2
-      containerRuntimeVersion: docker://1.12.6
-      kernelVersion: 4.8.0-040800-generic
-      kubeProxyVersion: v1.6.2
-      kubeletVersion: v1.6.2
-      machineID: c686a24f90944de9b573f3bc3c72a4c2
-      operatingSystem: linux
-      osImage: Ubuntu 16.04.2 LTS
-      systemUUID: 335BFA80-B175-0000-0000-000000000000
-- apiVersion: v1
-  kind: Node
-  metadata:
-    annotations:
-      node.alpha.kubernetes.io/ttl: "0"
-      projectcalico.org/IPv4Address: 10.192.0.4/16
-      volumes.kubernetes.io/controller-managed-attach-detach: "true"
-    creationTimestamp: 2017-06-05T21:20:09Z
-    labels:
-      beta.kubernetes.io/arch: amd64
-      beta.kubernetes.io/os: linux
-      kubernetes.io/hostname: kube-node-2
-    name: kube-node-2
-    namespace: ""
-    resourceVersion: "1067"
-    selfLink: /api/v1/nodeskube-node-2
-    uid: c1393ab2-4a34-11e7-aeee-0242386393d0
-  spec:
-    externalID: kube-node-2
-    podCIDR: 192.168.2.0/24
-  status:
-    addresses:
-    - address: 10.192.0.4
-      type: LegacyHostIP
-    - address: 10.192.0.4
-      type: InternalIP
-    - address: kube-node-2
-      type: Hostname
-    allocatable:
-      cpu: "8"
-      memory: 49318300Ki
-      pods: "110"
-    capacity:
-      cpu: "8"
-      memory: 49420700Ki
-      pods: "110"
-    conditions:
-    - lastHeartbeatTime: 2017-06-05T21:22:56Z
-      lastTransitionTime: 2017-06-05T21:20:09Z
-      message: kubelet has sufficient disk space available
-      reason: KubeletHasSufficientDisk
-      status: "False"
-      type: OutOfDisk
-    - lastHeartbeatTime: 2017-06-05T21:22:56Z
-      lastTransitionTime: 2017-06-05T21:20:09Z
-      message: kubelet has sufficient memory available
-      reason: KubeletHasSufficientMemory
-      status: "False"
-      type: MemoryPressure
-    - lastHeartbeatTime: 2017-06-05T21:22:56Z
-      lastTransitionTime: 2017-06-05T21:20:09Z
-      message: kubelet has no disk pressure
-      reason: KubeletHasNoDiskPressure
-      status: "False"
-      type: DiskPressure
-    - lastHeartbeatTime: 2017-06-05T21:22:56Z
-      lastTransitionTime: 2017-06-05T21:20:50Z
-      message: kubelet is posting ready status. AppArmor enabled
-      reason: KubeletReady
-      status: "True"
-      type: Ready
-    daemonEndpoints:
-      kubeletEndpoint:
-        Port: 10250
-    nodeInfo:
-      architecture: amd64
-      bootID: ac6c11fc-1539-4900-a8c9-48323f2fc3a2
-      containerRuntimeVersion: docker://1.12.6
-      kernelVersion: 4.8.0-040800-generic
-      kubeProxyVersion: v1.6.2
-      kubeletVersion: v1.6.2
-      machineID: 456468d005554a1ea8c304dfdf5fa5f3
-      operatingSystem: linux
-      osImage: Ubuntu 16.04.2 LTS
-      systemUUID: 335BFA80-B175-0000-0000-000000000000
-kind: List
-metadata: {}
-resourceVersion: ""
-selfLink: ""
+kind: Node
+metadata:
+  annotations:
+    node.alpha.kubernetes.io/ttl: "0"
+    projectcalico.org/IPv4Address: 10.192.0.2/16
+    volumes.kubernetes.io/controller-managed-attach-detach: "true"
+  labels:
+    beta.kubernetes.io/arch: amd64
+    beta.kubernetes.io/os: linux
+    kubernetes.io/hostname: kube-master
+    node-role.kubernetes.io/master: ""
+  name: kube-master
+  namespace: ""
+spec:
+  externalID: kube-master
+  podCIDR: 192.168.0.0/24
+
+---
+
+apiVersion: v1
+kind: Node
+metadata:
+  annotations:
+    node.alpha.kubernetes.io/ttl: "0"
+    projectcalico.org/IPv4Address: 10.192.0.3/16
+    volumes.kubernetes.io/controller-managed-attach-detach: "true"
+  labels:
+    beta.kubernetes.io/arch: amd64
+    beta.kubernetes.io/os: linux
+    kubernetes.io/hostname: kube-node-1
+  name: kube-node-1
+  namespace: ""
+spec:
+  externalID: kube-node-1
+  podCIDR: 192.168.1.0/24
+
+---
+
+apiVersion: v1
+kind: Node
+metadata:
+  annotations:
+    node.alpha.kubernetes.io/ttl: "0"
+    projectcalico.org/IPv4Address: 10.192.0.4/16
+    volumes.kubernetes.io/controller-managed-attach-detach: "true"
+  labels:
+    beta.kubernetes.io/arch: amd64
+    beta.kubernetes.io/os: linux
+    kubernetes.io/hostname: kube-node-2
+  name: kube-node-2
+  namespace: ""
+spec:
+  externalID: kube-node-2
+  podCIDR: 192.168.2.0/24

@@ -15,16 +15,12 @@ FROM alpine:3.6
 MAINTAINER Stephen Schlie <schlie@tigera.io>
 
 ADD bin/confd /bin/confd
+ADD https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/amd64/kubectl /bin/kubectl
+ADD https://github.com/projectcalico/bird/releases/download/v0.3.1/bird /bin/bird
+ADD https://github.com/projectcalico/bird/releases/download/v0.3.1/bird6 /bin/bird6
 
-RUN apk --no-cache add git ca-certificates openssl
-RUN update-ca-certificates
+RUN chmod +x /bin/kubectl && chmod +x /bin/bird && chmod +x /bin/bird6                                                                     
 
-RUN /usr/bin/wget -P /bin https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/amd64/kubectl
-RUN /usr/bin/wget -P /bin https://github.com/projectcalico/bird/releases/download/v0.3.1/bird
-RUN /usr/bin/wget -P /bin https://github.com/projectcalico/bird/releases/download/v0.3.1/bird6
-
-RUN chmod +x /bin/kubectl
-RUN chmod +x /bin/bird
-RUN chmod +x /bin/bird6
+RUN apk --no-cache add git
 
 RUN mkdir -p /tests/
