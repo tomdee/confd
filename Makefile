@@ -52,9 +52,9 @@ bin/confd: $(GO_FILES) vendor/.up-to-date
 	             ( echo "Error: bin/confd was not statically linked"; false ) )'
 
 .PHONY: test-kdd
-## Run template tests
-test: bin/confd run-etcd-host run-k8s-apiserver
-	docker run --rm --net=host -v $(CURDIR)/tests/:/tests/ heschlie/confd-test /bin/sh
+## Run template tests against KDD
+test-kdd: bin/confd run-etcd-host run-k8s-apiserver
+	docker run --rm --net=host -v $(CURDIR)/tests/:/tests/ heschlie/confd-test /bin/sh -c '/tests/test_kdd.sh'
 
 ## Etcd is used by the kubernetes
 run-etcd-host: stop-etcd

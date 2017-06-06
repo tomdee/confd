@@ -2,6 +2,19 @@
 
 export NODENAME="kube-master"
 
+echo "Waiting for API server to come online"
+until /bin/kubectl version; do
+  sleep 1
+  done
+
+/bin/kubectl apply -f /tests/tprs.yaml
+/bin/kubectl apply -f /tests/nodes.yaml
+
+echo "Waiting for TPRs to apply"
+until /bin/kubectl apply -f /tests/tpr_resources.yaml; do
+  sleep 1
+  done
+
 echo "Getting latest confd templates from calicoctl"
 /usr/bin/git clone https://github.com/projectcalico/calicoctl.git
 /bin/ln -s /calicoctl/calico_node/filesystem/etc/calico/ /etc/calico
