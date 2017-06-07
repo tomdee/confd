@@ -55,6 +55,10 @@ bin/confd: $(GO_FILES) vendor/.up-to-date
                ( ldd bin/confd 2>&1 | grep -q "Not a valid dynamic program" || \
 	             ( echo "Error: bin/confd was not statically linked"; false ) )'
 
+.PHONY: test
+## Run all tests
+test: test-kdd test-etcd
+
 .PHONY: test-kdd
 ## Run template tests against KDD
 test-kdd: bin/confd fetch-bins run-etcd-host run-k8s-apiserver
