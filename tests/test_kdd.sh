@@ -1,44 +1,50 @@
 #!/bin/sh
 
+# This is needed for use in the keys for our templates, both the sed commands
+# below use them as well as the templates confd uses.
 export NODENAME="kube-master"
 
 echo "Waiting for API server to come online"
-until /bin/kubectl version; do
+until kubectl version; do
   sleep 1
 done
 
-/bin/kubectl apply -f /tests/tprs.yaml
-/bin/kubectl apply -f /tests/nodes.yaml
+# This will create the dummy nodes and the third party resources we can populate
+kubectl apply -f /tests/tprs.yaml
+kubectl apply -f /tests/nodes.yaml
 
 echo "Waiting for TPRs to apply"
-until /bin/kubectl apply -f /tests/tpr_data.yaml; do
+# There is a delay when creating the TPRs and them being ready for use, so we
+# try to apply the data until it finally makes it into the API server
+until kubectl apply -f /tests/tpr_data.yaml; do
   sleep 1
 done
 
-echo "Getting latest confd templates from calicoctl"
-/usr/bin/git clone https://github.com/projectcalico/calicoctl.git
-/bin/ln -s /calicoctl/calico_node/filesystem/etc/calico/ /etc/calico
+echo "Getting latest confd templates from calicoctl repo"
+git clone https://github.com/projectcalico/calicoctl.git /calicoctl
+ln -s /calicoctl/calico_node/filesystem/etc/calico/ /etc/calico
 
 echo "Building initial toml files"
+# This is pulled from the calico_node rc.local script, it generates these three
+# toml files populated with the $NODENAME var.
 sed "s/NODENAME/$NODENAME/" /etc/calico/confd/templates/bird6_aggr.toml.template > /etc/calico/confd/conf.d/bird6_aggr.toml
 sed "s/NODENAME/$NODENAME/" /etc/calico/confd/templates/bird_aggr.toml.template > /etc/calico/confd/conf.d/bird_aggr.toml
 sed "s/NODENAME/$NODENAME/" /etc/calico/confd/templates/bird_ipam.toml.template > /etc/calico/confd/conf.d/bird_ipam.toml
 
 # Need to pause as running confd immediately after might result in files not being present.
-sleep 1
+sync
 
 echo "Running confd against KDD"
-/bin/confd -kubeconfig=/tests/confd_kubeconfig -onetime -backend=k8s -confdir=/etc/calico/confd -log-level=debug >/dev/null 2>&1 || true
-/bin/confd -kubeconfig=/tests/confd_kubeconfig -onetime -backend=k8s -confdir=/etc/calico/confd -log-level=debug >/dev/null 2>&1 || true
+confd -kubeconfig=/tests/confd_kubeconfig -onetime -backend=k8s -confdir=/etc/calico/confd -log-level=debug >/dev/null 2>&1 || true
+confd -kubeconfig=/tests/confd_kubeconfig -onetime -backend=k8s -confdir=/etc/calico/confd -log-level=debug >/dev/null 2>&1 || true
 
 ret_code=0
 
 for f in `ls /tests/compiled_templates`; do
   echo "Comparing $f"
-  /usr/bin/diff -q /tests/compiled_templates/$f /etc/calico/confd/config/$f
-  if [ $? != 0 ]; then
+  if  ! diff -q /tests/compiled_templates/$f /etc/calico/confd/config/$f; then
     echo "${f} templates do not match, showing diff of expected vs received"
-    /usr/bin/diff /tests/compiled_templates/$f /etc/calico/confd/config/$f
+    diff /tests/compiled_templates/$f /etc/calico/confd/config/$f
     ret_code=1
   fi
 done

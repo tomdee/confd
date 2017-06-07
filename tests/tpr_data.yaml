@@ -11,28 +11,6 @@ spec:
 apiVersion: projectcalico.org/v1
 kind: GlobalConfig
 metadata:
-  name: clusterguid
-  namespace: kube-system
-spec:
-  name: ClusterGUID
-  value: 910f26da0ccd4681ba206a26342fa0a1
-
----
-
-apiVersion: projectcalico.org/v1
-kind: GlobalConfig
-metadata:
-  name: clustertype
-  namespace: kube-system
-spec:
-  name: ClusterType
-  value: KDD
-
----
-
-apiVersion: projectcalico.org/v1
-kind: GlobalConfig
-metadata:
   name: ipinipenabled
   namespace: kube-system
 spec:

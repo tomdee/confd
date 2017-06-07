@@ -8,6 +8,7 @@ all: bin/confd
 GO_BUILD_CONTAINER?=calico/go-build:v0.4
 K8S_VERSION=1.6.4
 TEST_CONTAINER=heschlie/confd-test
+LOCAL_IP_ENV?=$(shell ip route get 8.8.8.8 | head -1 | awk '{print $$7}')
 
 # All go files.
 GO_FILES:=$(shell find . -type f -name '*.go')
@@ -54,8 +55,11 @@ bin/confd: $(GO_FILES) vendor/.up-to-date
 
 .PHONY: test-kdd
 ## Run template tests against KDD
-test-kdd: bin/confd run-etcd-host run-k8s-apiserver
-	docker run --rm --net=host -v $(CURDIR)/tests/:/tests/ heschlie/confd-test /bin/sh -c '/tests/test_kdd.sh'
+test-kdd: bin/confd fetch-bins run-etcd-host run-k8s-apiserver
+	docker run --rm --net=host \
+	    -v $(CURDIR)/tests/:/tests/ \
+		-v $(CURDIR)/bin:/calico/bin/ \
+		heschlie/confd-test /tests/test_kdd.sh
 
 ## Etcd is used by the kubernetes
 run-etcd-host: stop-etcd
@@ -81,3 +85,18 @@ run-k8s-apiserver: stop-k8s-apiserver
 ## Stop Kubernetes apiserver
 stop-k8s-apiserver:
 	@-docker rm -f calico-k8s-apiserver
+
+.PHONY: fetch-bins
+## Fetch our binary files for testing
+fetch-bins: bin/kubectl bin/bird bin/bird6
+
+bin/kubectl bin/bird bin/bird6:
+	mkdir -p bin/
+	wget -q https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/amd64/kubectl -O bin/kubectl
+	wget -q https://github.com/projectcalico/bird/releases/download/v0.3.1/bird -O bin/bird
+	wget -q https://github.com/projectcalico/bird/releases/download/v0.3.1/bird6 -O bin/bird6
+	chmod +x bin/kubectl bin/bird bin/bird6
+
+.PHONY: clean
+clean:
+	rm -rf bin/
