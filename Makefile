@@ -5,6 +5,8 @@
 
 all: bin/confd
 
+ETCDCTL_VER=v3.1.8
+
 GO_BUILD_CONTAINER?=calico/go-build:v0.4
 K8S_VERSION=1.6.4
 TEST_CONTAINER=heschlie/confd-test
@@ -61,6 +63,14 @@ test-kdd: bin/confd fetch-bins run-etcd-host run-k8s-apiserver
 		-v $(CURDIR)/bin:/calico/bin/ \
 		heschlie/confd-test /tests/test_kdd.sh
 
+.PHONY: test-etcd
+## Run template tests against etcd
+test-etcd: bin/confd fetch-bins run-etcd-host run-k8s-apiserver
+	docker run --rm --net=host \
+	    -v $(CURDIR)/tests/:/tests/ \
+		-v $(CURDIR)/bin:/calico/bin/ \
+		heschlie/confd-test /tests/test_etcd.sh
+
 ## Etcd is used by the kubernetes
 run-etcd-host: stop-etcd
 	docker run --detach \
@@ -88,15 +98,18 @@ stop-k8s-apiserver:
 
 .PHONY: fetch-bins
 ## Fetch our binary files for testing
-fetch-bins: bin/kubectl bin/bird bin/bird6
+fetch-bins: bin/kubectl bin/bird bin/bird6 bin/etcdctl
 
-bin/kubectl bin/bird bin/bird6:
-	mkdir -p bin/
+bin/kubectl bin/bird bin/bird6 bin/etcdctl:
+	mkdir -p bin/ tmp/
 	wget -q https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/amd64/kubectl -O bin/kubectl
 	wget -q https://github.com/projectcalico/bird/releases/download/v0.3.1/bird -O bin/bird
 	wget -q https://github.com/projectcalico/bird/releases/download/v0.3.1/bird6 -O bin/bird6
-	chmod +x bin/kubectl bin/bird bin/bird6
+	wget -q https://github.com/coreos/etcd/releases/download/v3.1.8/etcd-$(ETCDCTL_VER)-linux-amd64.tar.gz -O tmp/etcd-$(ETCDCTL_VER)-linux-amd64.tar.gz
+	tar -zxvf tmp/etcd-$(ETCDCTL_VER)-linux-amd64.tar.gz --strip=1 -C bin/ etcd-$(ETCDCTL_VER)-linux-amd64/etcdctl
+	rm tmp/etcd-$(ETCDCTL_VER)-linux-amd64.tar.gz
+	chmod +x bin/kubectl bin/bird bin/bird6 bin/etcdctl
 
 .PHONY: clean
 clean:
-	rm -rf bin/
+	rm -rf bin/ tmp/
