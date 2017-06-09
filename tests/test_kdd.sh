@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Add our bins to the PATH
+PATH=$PATH:/calico/bin
+
 script_dir="$(dirname "$0")"
 source "$script_dir/utils.sh"
 

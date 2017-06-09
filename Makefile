@@ -65,7 +65,8 @@ test-kdd: bin/confd fetch-bins run-etcd-host run-k8s-apiserver
 	docker run --rm --net=host \
 	    -v $(CURDIR)/tests/:/tests/ \
 		-v $(CURDIR)/bin:/calico/bin/ \
-		heschlie/confd-test /tests/test_kdd.sh
+		-e LOCAL_USER_ID=0 \
+		$(GO_BUILD_CONTAINER) /tests/test_kdd.sh
 
 .PHONY: test-etcd
 ## Run template tests against etcd
@@ -73,7 +74,8 @@ test-etcd: bin/confd fetch-bins run-etcd-host run-k8s-apiserver
 	docker run --rm --net=host \
 	    -v $(CURDIR)/tests/:/tests/ \
 		-v $(CURDIR)/bin:/calico/bin/ \
-		heschlie/confd-test /tests/test_etcd.sh
+		-e LOCAL_USER_ID=0 \
+		$(GO_BUILD_CONTAINER) /tests/test_etcd.sh
 
 ## Etcd is used by the kubernetes
 run-etcd-host: stop-etcd
